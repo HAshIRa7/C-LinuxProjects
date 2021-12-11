@@ -3,7 +3,9 @@
 #include <unistd.h> 
 #include <poll.h>
 
-int main(void) { 
+int main(void) {  
+
+    int parent_pid = syscall(SYS_pidfd_open, getpid(), NULL);
     pid_t child_id = fork(); 
     if(child_id < 0) {
         perror("fork"); 
@@ -11,7 +13,6 @@ int main(void) {
     } 
 
     if(child_id == 0) { 
-        int parent_pid = syscall(SYS_pidfd_open, getppid(), NULL);
         struct pollfd pollfd; 
         pollfd.fd = parent_pid; 
         pollfd.events = POLLIN; 
