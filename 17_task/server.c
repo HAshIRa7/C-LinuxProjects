@@ -7,18 +7,7 @@
 #include <stdlib.h> 
 #include <string.h>
 
-mqd_t queue_fd;  
-char* queue_name;
-
-void handler(int signum) {
-    mq_close(queue_fd); 
-    mq_unlink(queue_name);  
-    if(errno == 0) {
-         exit(0);
-    } else {
-        exit(1); 
-    }
-}
+void handler(int signum) {}
 
 int main(int argc, char** argv) {    
     struct sigaction sa; 
@@ -29,12 +18,9 @@ int main(int argc, char** argv) {
         perror("sigaction"); 
         return 2; 
     }
-    
-    char str[256]; 
-    snprintf(str, sizeof(argv[1]), "/%s", argv[1]); 
-    //printf("%s\n", str); 
-    queue_name = str;
-    queue_fd = mq_open(str, O_CREAT | O_EXCL | O_RDONLY, 0666, NULL); 
+
+    char* queue_name = argv[1];
+    mqd_t queue_fd = mq_open(queue_name, O_CREAT | O_EXCL | O_RDONLY, 0666, NULL); 
     if(queue_fd == (mqd_t) - 1) {
         perror("mq_open");
         return 3;  

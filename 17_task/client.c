@@ -11,10 +11,8 @@ int main(int argc, char** argv) {
         printf ("Usage: %s /destination_name \"message\"\n", argv[0]);
         return 1;
     } 
-    char str[256]; 
-    snprintf(str, sizeof(argv[1]), "/%s", argv[1]); 
     //printf("%s\n", str);
-    mqd_t queue_fd = mq_open(str, O_WRONLY); 
+    mqd_t queue_fd = mq_open(argv[1], O_WRONLY); 
     if(queue_fd < 0) {
         perror("mq_open"); 
         return 1; 
